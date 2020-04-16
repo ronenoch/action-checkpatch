@@ -32,10 +32,12 @@ PRNUM=${PR%"/merge"}
 URL=https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${PRNUM}
 echo " - API endpoint: $URL"
 
-# list=$(curl $URL -X GET -s | jq '.head.sha' -r)
-list=$GITHUB_HEAD_REF
+list=$(curl $URL -X GET -s | jq '.head.sha' -r | echo)
+echo $list
 # len=$(echo "$list" | wc -l)
 # echo " - heads $len: $list"
+
+list=$GITHUB_HEAD_REF
 
 # Run review.sh on the PR's head
 echo

@@ -5,13 +5,14 @@
 
 # Argument
 COMMIT=$1
+BASE=$2
 
 # Get PR number
 PR=${GITHUB_REF#"refs/pull/"}
 PRNUM=${PR%"/merge"}
 
 # Generate email style commit message
-PATCHMAIL=$(git ls-tree --name-only -r $1 | checkpatch.pl -f )
+PATCHMAIL=$(git diff --name-only $1 $2 | checkpatch.pl -f )
 
 # Github REST API endpoints
 BODY_URL=https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PRNUM}/comments

@@ -46,7 +46,7 @@ for sha1 in $list; do
     echo "-------------------------------------------------------------"
     echo -e "[$i/$len] Check head - \e[1;34m$sha1\e[0m"
     echo "-------------------------------------------------------------"
-    /review.sh ${sha1} || RESULT=1;
+    /review.sh ${sha1} ${GITHUB_BASE_REF} || RESULT=1;
     echo
     ((i++))
 done

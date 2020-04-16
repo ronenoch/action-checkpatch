@@ -29,26 +29,23 @@ echo
 echo -e "\e[0;34mGet the list of commits included in the PR($GITHUB_REF).\e[0m"
 PR=${GITHUB_REF#"refs/pull/"}
 PRNUM=${PR%"/merge"}
-URL=https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${PRNUM}
+URL=https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${PRNUM}/commits
 echo " - API endpoint: $URL"
 
-list=$(curl $URL -X GET -s | jq '.head.sha' -r | echo)
-echo $list
-# len=$(echo "$list" | wc -l)
-# echo " - heads $len: $list"
+list=$(curl $URL -X GET -s | jq '.[].sha' -r)
+len=$(echo "$list" | wc -l)
+echo " - Commits $len: $list"
 
-list=$GITHUB_HEAD_REF
-
-# Run review.sh on the PR's head
+# Run review.sh on each commit in the PR
 echo
-echo -e "\e[0;34mStart review for head.\e[0m"
+echo -e "\e[0;34mStart review for each commits.\e[0m"
 
 i=1
 for sha1 in $list; do
     echo "-------------------------------------------------------------"
-    echo -e "[$i/$len] Check head - \e[1;34m$sha1\e[0m"
+    echo -e "[$i/$len] Check commit - \e[1;34m$sha1\e[0m"
     echo "-------------------------------------------------------------"
-    /review.sh ${sha1} ${GITHUB_BASE_REF} || RESULT=1;
+    /review.sh ${sha1} || RESULT=1;
     echo
     ((i++))
 done
